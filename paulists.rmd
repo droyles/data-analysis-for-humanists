@@ -1,0 +1,52 @@
+Summary of Paulist missions to Catholics and non-Catholics.
+
+```{r}
+library(ggplot2)
+missions <- read.csv("paulist-summary.csv")
+```
+
+How many missions were there each year?
+
+```{r}
+ggplot(data = missions) +
+  geom_line(aes(x = year_start, y = missions_total))
+```
+
+How many converts were there each year?
+
+```{r}
+ggplot(data = missions) +
+  geom_line(aes(x = year_start, y = converts))
+```
+
+Now you try. How many confessions were there each year?
+
+```{r}
+
+```
+
+Let's make a line plot with missions to Catholics and non-Catholics. This is a line plot with missions to Catholics? How would you add a line for non-Catholic missions?
+
+```{r}
+ggplot(data = missions) +
+  geom_line(aes(x = year_start, y = missions_catholic),
+            color = "green") +
+  ggtitle("Number of Missions to Catholics and Non-Catholics") +
+  xlab(NULL) +
+  ylab("Number of Missions")
+```
+
+Let's make a more bar plot of the number of missions.
+
+```{r}
+ggplot(data = missions) +
+  geom_bar(aes(x = year_start, y = missions_total),
+           stat = "identity") 
+```
+
+Let's do some calculations on top of 
+
+```{r}
+ggplot(data = missions) +
+  geom_line(aes(x = year_start, y = confessions / missions_total))
+```

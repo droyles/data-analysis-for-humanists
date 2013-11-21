@@ -44,7 +44,7 @@ ggplot(data = missions) +
            stat = "identity") 
 ```
 
-Let's do some calculations on top of 
+Let's do some put two variables on top of another.
 
 ```{r}
 ggplot(data = missions) +

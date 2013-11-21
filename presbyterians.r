@@ -44,3 +44,10 @@ What was the trend of infant baptism relative to all ways of entering the Presby
 ```{r}
 
 ```
+
+Did the number of ministers affect the growth of the denomination?
+
+```{r}
+
+```
+

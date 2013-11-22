@@ -1,0 +1,112 @@
+# Map of Paulist Missions
+
+Let's load the necessary libraries.
+
+```{r}
+library(ggplot2)
+library(ggmap)
+library(maps)
+library(lubridate)
+
+paulists <- read.csv("paulist-missions.csv")
+```
+
+Let's get a look at the data.
+
+```{r}
+str(paulists)
+```
+
+We want to geocode the data. This is time consuming, so let's just do a few of the missions. Let's do all the missions that the Paulists did when they were still Redemptorists. Notice that we have a field `order` which has two levels, "Paulist" and "Redemptorist." We can create a new data frame which selects just those missions.
+
+```{r}
+redemptorists <- subset(paulists, order == "Redemptorist")
+
+str(redemptorists)
+```
+
+Hmm. Eighty-six is too many missions to geocode. So let's subset the missions by year. To do that we need to turn the strings for dates into date objects, then select the year, then create a new column with that data.
+
+```{r}
+today <- mdy("11/22/2013")
+todays_year <- year(today)
+
+paulists <- transform(paulists, year = year(mdy(as.character(start.date))))
+```
+
+Now let's select only the missions from 1851.
+
+```{r}
+paulists_small <- subset(paulists, year == 1851)
+```
+
+Nine missions is a reasonable test. Now let's geocode the location column.
+
+```{r}
+paulists_small_geo <- transform(paulists_small,
+                                geo = geocode(as.character(location)))
+```
+
+But I've already geocoded all the data, so let's just load that.
+
+```{r}
+paulists_geocoded <- read.csv("paulist-missions.geocoded.csv")
+paulists_geocoded <- transform(paulists_geocoded,
+                               year = year(mdy(as.character(start.date))))
+```
+
+Let's map all the points. First we need to get a map of the United States. We can load that data from an R package.
+
+```{r}
+map_us <- map_data("state")
+
+str(map_us)
+```
+
+```{r}
+us <- ggplot() +
+      geom_polygon(data = map_us, aes(x = long, y = lat, group = group),
+        fill = "white", color = "gray", size = 0.2) +
+      coord_map(project="albers", at0 = 45.5, lat1 = 29.5)
+print(us)
+```
+
+Now let's add a layer with our points.
+
+```{r}
+us +
+  geom_point(data = paulists_geocoded,
+             aes(x = geo.lon, y = geo.lat),
+             color = "red", alpha = 0.25)
+```
+
+We can adjust the size based on another variable, say, confessions
+
+```{r}
+us +
+  geom_point(data = paulists_geocoded,
+             aes(x = geo.lon, y = geo.lat, size = communion.general),
+             color = "red", alpha = 0.25) +
+  theme(legend.position = "bottom")
+```
+
+Now we want a way to plot only the missions for a given year. We could do this manually, but instead we'll write a function.
+
+```{r}
+plot_year <- function(select_year) {
+  to_plot <- subset(paulists_geocoded, year == select_year)
+  us +
+    geom_point(data = to_plot,
+               aes(x = geo.lon, y = geo.lat, size = communion.general),
+               color = "red", alpha = 0.25) +
+    theme(legend.position = "bottom")
+}
+```
+
+Now we can plot various years:
+
+```{r}
+plot_year(1855)
+plot_year(1876)
+plot_year(1878)
+```

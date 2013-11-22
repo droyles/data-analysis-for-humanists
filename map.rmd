@@ -98,7 +98,7 @@ plot_year <- function(select_year) {
   us +
     geom_point(data = to_plot,
                aes(x = geo.lon, y = geo.lat, size = communion.general),
-               color = "red", alpha = 0.25) +
+               color = "red", alpha = 1) +
     theme(legend.position = "bottom")
 }
 ```

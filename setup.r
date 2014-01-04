@@ -1,3 +1,6 @@
+cat(1998)
+
+# We're starting our workshop
 # Packages to install
 to_install <- c("ggplot2", "plyr", "ggmap", "knitr", "maps", "lubridate")
 

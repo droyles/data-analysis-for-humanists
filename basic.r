@@ -2,12 +2,14 @@
 missions <- read.csv("paulist-summary.csv")
 
 # Structure of a data frame
+?str
 str(missions)
 
 # Summary of a data frame
 summary(missions)
 
 # Summary of single variable
+missions$year_start
 summary(missions$converts)
 
 # Base graphics plot with points

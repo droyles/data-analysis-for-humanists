@@ -1,4 +1,4 @@
-cat(1998)
+cat("Hello THATCamp.")
 
 # We're starting our workshop
 # Packages to install
